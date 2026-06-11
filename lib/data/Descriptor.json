@@ -163,7 +163,48 @@
 					}
 				}
 			}
+		},
+
+		"/mia-commands/api/execute": {
+			"put": {
+				"description": "",
+				"summary": "Execute a new command",
+				"operationId": "executeCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Command"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Running command",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommandRunning"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
+
 	},
 	"components": {
 		"schemas": {
@@ -183,6 +224,36 @@
 					}
 				},
 				"required": [ "code", "message" ]
+			},
+			"Command": {
+				"type": "object",
+				"properties": {
+					"command": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": [ "command" ]
+			},
+			"CommandRunning": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Command"
+					},
+					{
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"startedAt": {
+								"type": "string",
+								"format": "date-time"
+							}
+						},
+						"required": [ "id", "startedAt" ]
+					}
+				]
 			},
 			"PushEventPluginInitialized": {
 				"type": "object",

@@ -6,6 +6,7 @@
 
     // externals
     import { Mediator } from "node-pluginsmanager-plugin";
+    import uniqid from "uniqid";
 
 // types & interfaces
 
@@ -25,6 +26,10 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
     "released": [ ContainerPattern ];
     "error": [ components["schemas"]["PushEventPluginError"]["data"] ];
 }> {
+
+    // private
+
+        private _commands: Array<components["schemas"]["CommandRunning"]> = [];
 
     // constructor
 
@@ -79,5 +84,30 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
     }
 
     // <api>
+
+    public executeCommand (
+        urlParams: operations["executeCommand"]["parameters"],
+        bodyParams: operations["executeCommand"]["requestBody"]["content"]["application/json"]
+    ): Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]> {
+
+        const newCommand: components["schemas"]["CommandRunning"] = {
+            "id": uniqid(),
+            "startedAt": new Date().toISOString(),
+            ...bodyParams
+        };
+
+        this._commands.push(newCommand);
+
+        setTimeout((): void => {
+
+            this._commands = this._commands.filter((command: components["schemas"]["CommandRunning"]): boolean => {
+                return command.id !== newCommand.id;
+            });
+
+        }, 5000);
+
+        return Promise.resolve(newCommand);
+
+    }
 
 }

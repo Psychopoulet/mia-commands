@@ -226,6 +226,27 @@ export class SDK extends EventEmitter<{
 
     }
 
+    public executeCommand (command: components["schemas"]["Command"]["command"]): Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]> {
+
+        const url: keyof paths = "/mia-commands/api/execute";
+        const method: HttpMethodsOf<typeof url> = "put";
+
+        return fetch(url, {
+            "method": method,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "command": command
+            })
+        }).then((res: Response): Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]> => {
+
+            return this._parseResponse(res) as Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]>;
+
+        });
+
+    }
+
 }
 
 let _sdk: SDK | null = null;
