@@ -5,11 +5,7 @@
     import { writeFile, mkdir, rm } from "node:fs/promises";
 
     // externals
-    import { Orchestrator } from "node-pluginsmanager-plugin";
-
-    // locals
-    import isFile from "./utils/isFile";
-    import isDirectory from "./utils/isDirectory";
+    import { Orchestrator, isFile, isDirectory } from "node-pluginsmanager-plugin";
 
 // types & interfaces
 
