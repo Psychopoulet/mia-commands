@@ -3,13 +3,19 @@
     // natives
     import { join } from "node:path";
     import { readFile, writeFile } from "node:fs/promises";
-    // import { spawn } from "node:child_process";
+    import { spawn, exec } from "node:child_process";
 
     // externals
-    import { Mediator, readJSONFile, ConflictError, NotFoundError } from "node-pluginsmanager-plugin";
-    import uniqid from "uniqid";
+    import {
+        Mediator,
+        readJSONFile, isPlainObject,
+        ConflictError, NotFoundError
+    } from "node-pluginsmanager-plugin";
 
 // types & interfaces
+
+    // natives
+    import type { ChildProcess, SpawnOptions } from "node:child_process";
 
     // externals
     import type ContainerPattern from "node-containerpattern";
@@ -35,7 +41,7 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
     // private
 
-        private readonly _commands: Array<components["schemas"]["CommandRunning"]> = [];
+        private readonly _runningCommands: Array<components["schemas"]["RunningCommand"]> = [];
         private _registeredCommandsFile: string;
 
     // constructor
@@ -126,7 +132,6 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
         bodyParams: operations["deleteRegisteredCommand"]["requestBody"]["content"]["application/json"]
     ): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> {
 
-
         return this.getRegisteredCommands().then((registeredCommands: Array<components["schemas"]["RegisteredCommand"]>): Promise<void> => {
 
             const index: number = registeredCommands.findIndex((command: components["schemas"]["RegisteredCommand"]): boolean => {
@@ -149,47 +154,145 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
     }
 
-    // @TODO
     public getRunningCommands (): Promise<operations["getRunningCommands"]["responses"]["200"]["content"]["application/json"]> {
-        return Promise.resolve([]);
+
+        return Promise.resolve(this._runningCommands);
+
     }
 
-    // @TODO
     public runCommand (
         urlParams: operations["runCommand"]["parameters"],
         bodyParams: operations["runCommand"]["requestBody"]["content"]["application/json"]
     ): Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]> {
 
-        const newCommand: components["schemas"]["CommandRunning"] = {
-            "id": uniqid(),
+        const options: SpawnOptions = {};
+
+        if ("string" === typeof bodyParams.command.workingDirectory && "" !== bodyParams.command.workingDirectory.trim()) {
+            options.cwd = bodyParams.command.workingDirectory;
+        }
+        if (isPlainObject(bodyParams.command.environmentVariables)) {
+            options.env = bodyParams.command.environmentVariables;
+        }
+        if ("boolean" === typeof bodyParams.command.detached) {
+            options.detached = bodyParams.command.detached;
+        }
+        if ("boolean" === typeof bodyParams.command.windowsHide) {
+            options.windowsHide = bodyParams.command.windowsHide;
+        }
+        if ("number" === typeof bodyParams.command.timeout) {
+            options.timeout = bodyParams.command.timeout;
+        }
+
+        const childProcess: ChildProcess = spawn(bodyParams.command.binary, bodyParams.command.arguments ?? [], options);
+
+        const newCommand: components["schemas"]["RunningCommand"] = {
+            "pid": childProcess.pid as number,
             "startedAt": new Date().toISOString(),
             ...bodyParams
         };
 
-        this._commands.push(newCommand);
+        this._runningCommands.push(newCommand);
 
-        setTimeout((): void => {
+        this.emit("running-command-running", newCommand);
 
-            const index: number = this._commands.findIndex((command: components["schemas"]["CommandRunning"]): boolean => {
-                return command.id === newCommand.id;
+        let error: string = "";
+
+        childProcess.on("error", (err: Error): void => {
+            error = err.message;
+        }).on("close", (code: number, signal: string): void => {
+
+            if (0 !== code) {
+
+                this.emit("running-command-failed", {
+                    "command": newCommand,
+                    "error": {
+                        "code": signal,
+                        "message": error
+                    }
+                });
+
+            }
+            else {
+                this.emit("running-command-ended", newCommand);
+            }
+
+            const index: number = this._runningCommands.findIndex((command: components["schemas"]["RunningCommand"]): boolean => {
+                return command.pid === newCommand.pid;
             });
 
             if (-1 !== index) {
-                this._commands.splice(index);
+                this._runningCommands.splice(index);
             }
 
-        }, 5000);
+        });
+
+        childProcess.stdout?.setEncoding("utf-8");
+        childProcess.stdout?.on("data", (data: string): void => {
+
+            this.emit("running-command-log", {
+                "command": newCommand,
+                "content": data
+            });
+
+        });
+
+        childProcess.stderr?.setEncoding("utf-8");
+        childProcess.stderr?.on("data", (data: string): void => {
+
+            this.emit("running-command-warning", {
+                "command": newCommand,
+                "content": data
+            });
+
+        });
 
         return Promise.resolve(newCommand);
 
     }
 
-    // @TODO
     public stopRunningCommand (
         urlParams: operations["stopRunningCommand"]["parameters"],
         bodyParams: operations["stopRunningCommand"]["requestBody"]["content"]["application/json"]
     ): Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]> {
-        return Promise.resolve();
+
+        const index: number = this._runningCommands.findIndex((command: components["schemas"]["RunningCommand"]): boolean => {
+            return command.pid === bodyParams.pid;
+        });
+
+        if (-1 === index) {
+            throw new NotFoundError("Command '" + bodyParams.name + "' not found");
+        }
+
+        return new Promise((resolve: (value: unknown) => void, reject: (error: Error) => void): void => {
+
+            if("win32" === process.platform) {
+
+                exec("taskkill /PID " + bodyParams.pid + " /T /F", { "windowsHide": true }, (err: Error | null, stdout: string): void => {
+
+                    if(err) {
+                        return reject(err);
+                    }
+
+                    return resolve(stdout);
+
+                });
+
+            }
+            else if (process.kill(bodyParams.pid, "SIGTERM")) {
+                return resolve("ok");
+            }
+            else {
+                return reject(new Error("Impossible to stop command '" + bodyParams.pid + "'"));
+            }
+
+        }).then((): void => {
+
+            // no need to remove the command from the list because it will be removed by the "close" event
+
+            this.emit("running-command-stopped", bodyParams);
+
+        });
+
     }
 
 }

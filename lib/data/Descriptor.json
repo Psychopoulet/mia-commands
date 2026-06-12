@@ -277,7 +277,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/CommandRunning"
+										"$ref": "#/components/schemas/RunningCommand"
 									}
 								}
 							}
@@ -315,7 +315,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommandRunning"
+									"$ref": "#/components/schemas/RunningCommand"
 								}
 							}
 						}
@@ -341,7 +341,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RegisteredCommand"
+								"$ref": "#/components/schemas/RunningCommand"
 							}
 						}
 					}
@@ -411,7 +411,9 @@
 					"environmentVariables": {
 						"description": "= options/env",
 						"type": "object",
-						"additionalProperties": true
+						"additionalProperties": {
+							"type": "string"
+						}
 					},
 					"detached": {
 						"type": "boolean"
@@ -439,7 +441,7 @@
 				},
 				"required": [ "name", "command" ]
 			},
-			"CommandRunning": {
+			"RunningCommand": {
 				"type": "object",
 				"allOf": [
 					{
@@ -447,15 +449,15 @@
 					},
 					{
 						"properties": {
-							"id": {
-								"type": "string"
+							"pid": {
+								"type": "number"
 							},
 							"startedAt": {
 								"type": "string",
 								"format": "date-time"
 							}
 						},
-						"required": [ "id", "startedAt" ]
+						"required": [ "pid", "startedAt" ]
 					}
 				]
 			},
@@ -562,7 +564,7 @@
 						"enum": [ "running-command-running" ]
 					},
 					"data": {
-						"$ref": "#/components/schemas/CommandRunning"
+						"$ref": "#/components/schemas/RunningCommand"
 					}
 				},
 				"required": [ "id", "plugin", "command", "data" ]
@@ -581,7 +583,7 @@
 						"enum": [ "running-command-ended" ]
 					},
 					"data": {
-						"$ref": "#/components/schemas/CommandRunning"
+						"$ref": "#/components/schemas/RunningCommand"
 					}
 				},
 				"required": [ "id", "plugin", "command", "data" ]
@@ -603,7 +605,7 @@
 						"type": "object",
 						"properties": {
 							"command": {
-								"$ref": "#/components/schemas/CommandRunning"
+								"$ref": "#/components/schemas/RunningCommand"
 							},
 							"error": {
 								"$ref": "#/components/schemas/Error"
@@ -631,7 +633,7 @@
 						"type": "object",
 						"properties": {
 							"command": {
-								"$ref": "#/components/schemas/CommandRunning"
+								"$ref": "#/components/schemas/RunningCommand"
 							},
 							"content": {
 								"type": "string",
@@ -660,7 +662,7 @@
 						"type": "object",
 						"properties": {
 							"command": {
-								"$ref": "#/components/schemas/CommandRunning"
+								"$ref": "#/components/schemas/RunningCommand"
 							},
 							"content": {
 								"type": "string",
