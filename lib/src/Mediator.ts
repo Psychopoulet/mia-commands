@@ -1,20 +1,19 @@
 // deps
 
     // natives
-    import { readFile } from "node:fs/promises";
     import { join } from "node:path";
+    import { readFile, writeFile } from "node:fs/promises";
+    // import { spawn } from "node:child_process";
 
     // externals
-    import { Mediator } from "node-pluginsmanager-plugin";
+    import { Mediator, readJSONFile, ConflictError, NotFoundError } from "node-pluginsmanager-plugin";
     import uniqid from "uniqid";
 
 // types & interfaces
 
-    // natives
-
     // externals
     import type ContainerPattern from "node-containerpattern";
-    import type { iEventsMinimal } from "node-pluginsmanager-plugin";
+    import type { iEventsMinimal, iDescriptorUserOptions } from "node-pluginsmanager-plugin";
 
     // locals
     import type { operations, components } from "./Descriptor";
@@ -36,9 +35,18 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
     // private
 
-        private _commands: Array<components["schemas"]["CommandRunning"]> = [];
+        private readonly _commands: Array<components["schemas"]["CommandRunning"]> = [];
+        private _registeredCommandsFile: string;
 
     // constructor
+
+    public constructor (data: iDescriptorUserOptions) {
+
+        super(data);
+
+        this._registeredCommandsFile = join(this._externalResourcesDirectory, "registeredCommands.json");
+
+    }
 
     protected _initWorkSpace (): Promise<void> {
         return Promise.resolve();
@@ -84,25 +92,61 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
     // <api>
 
-    // @TODO
     public getRegisteredCommands (): Promise<operations["getRegisteredCommands"]["responses"]["200"]["content"]["application/json"]> {
-        return Promise.resolve([]);
+        return readJSONFile(this._registeredCommandsFile) as Promise<operations["getRegisteredCommands"]["responses"]["200"]["content"]["application/json"]>;
     }
 
-    // @TODO
     public registerCommand (
         urlParams: operations["registerCommand"]["parameters"],
         bodyParams: operations["registerCommand"]["requestBody"]["content"]["application/json"]
     ): Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]> {
-        return Promise.resolve();
+
+        return this.getRegisteredCommands().then((registeredCommands: Array<components["schemas"]["RegisteredCommand"]>): Promise<void> => {
+
+            if (registeredCommands.some((command: components["schemas"]["RegisteredCommand"]): boolean => {
+                return command.name === bodyParams.name;
+            })) {
+                throw new ConflictError("Command '" + bodyParams.name + "' already registered");
+            }
+
+            registeredCommands.push(bodyParams);
+
+            return writeFile(this._registeredCommandsFile, JSON.stringify(registeredCommands), "utf-8");
+
+        }).then((): void => {
+
+            this.emit("registered-command-added", bodyParams);
+
+        });
+
     }
 
-    // @TODO
     public deleteRegisteredCommand (
         urlParams: operations["deleteRegisteredCommand"]["parameters"],
         bodyParams: operations["deleteRegisteredCommand"]["requestBody"]["content"]["application/json"]
     ): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> {
-        return Promise.resolve();
+
+
+        return this.getRegisteredCommands().then((registeredCommands: Array<components["schemas"]["RegisteredCommand"]>): Promise<void> => {
+
+            const index: number = registeredCommands.findIndex((command: components["schemas"]["RegisteredCommand"]): boolean => {
+                return command.name === bodyParams.name;
+            });
+
+            if (-1 === index) {
+                throw new NotFoundError("Command '" + bodyParams.name + "' not found");
+            }
+
+            registeredCommands.splice(index, 1);
+
+            return writeFile(this._registeredCommandsFile, JSON.stringify(registeredCommands), "utf-8");
+
+        }).then((): void => {
+
+            this.emit("registered-command-deleted", bodyParams);
+
+        });
+
     }
 
     // @TODO
@@ -126,9 +170,13 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
         setTimeout((): void => {
 
-            this._commands = this._commands.filter((command: components["schemas"]["CommandRunning"]): boolean => {
-                return command.id !== newCommand.id;
+            const index: number = this._commands.findIndex((command: components["schemas"]["CommandRunning"]): boolean => {
+                return command.id === newCommand.id;
             });
+
+            if (-1 !== index) {
+                this._commands.splice(index);
+            }
 
         }, 5000);
 
