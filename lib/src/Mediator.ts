@@ -25,6 +25,13 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
     "initialized": [ ContainerPattern ];
     "released": [ ContainerPattern ];
     "error": [ components["schemas"]["PushEventPluginError"]["data"] ];
+    "registered-command-added": [ components["schemas"]["PushEventRegisteredCommandAdded"]["data"] ];
+    "registered-command-deleted": [ components["schemas"]["PushEventRegisteredCommandDeleted"]["data"] ];
+    "running-command-running": [ components["schemas"]["PushEventRunningCommandRunning"]["data"] ];
+    "running-command-ended": [ components["schemas"]["PushEventRunningCommandEnded"]["data"] ];
+    "running-command-failed": [ components["schemas"]["PushEventRunningCommandFailed"]["data"] ];
+    "running-command-log": [ components["schemas"]["PushEventRunningCommandLog"]["data"] ];
+    "running-command-warning": [ components["schemas"]["PushEventRunningCommandWarning"]["data"] ];
 }> {
 
     // private

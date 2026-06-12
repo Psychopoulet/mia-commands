@@ -10,7 +10,10 @@
 
     // locals
     import type { components, paths, operations } from "./Descriptor";
-    type tEvents = components["schemas"]["PushEventPluginInitialized"] | components["schemas"]["PushEventPluginReleased"] | components["schemas"]["PushEventPluginError"];
+    type tEvents = components["schemas"]["PushEventPluginInitialized"] | components["schemas"]["PushEventPluginReleased"] | components["schemas"]["PushEventPluginError"]
+        | components["schemas"]["PushEventRegisteredCommandAdded"] | components["schemas"]["PushEventRegisteredCommandDeleted"]
+        | components["schemas"]["PushEventRunningCommandRunning"] | components["schemas"]["PushEventRunningCommandEnded"] | components["schemas"]["PushEventRunningCommandFailed"]
+        | components["schemas"]["PushEventRunningCommandLog"] | components["schemas"]["PushEventRunningCommandWarning"];
 
     type HttpMethodsOf<P extends keyof paths> = {
         [M in keyof paths[P]]: paths[P][M] extends { "responses": unknown }
@@ -26,6 +29,13 @@ export class SDK extends EventEmitter<{
     "initialized": [];
     "released": [];
     "error": [ components["schemas"]["PushEventPluginError"]["data"] ];
+    "registered-command-added": [ components["schemas"]["PushEventRegisteredCommandAdded"]["data"] ];
+    "registered-command-deleted": [ components["schemas"]["PushEventRegisteredCommandDeleted"]["data"] ];
+    "running-command-running": [ components["schemas"]["PushEventRunningCommandRunning"]["data"] ];
+    "running-command-ended": [ components["schemas"]["PushEventRunningCommandEnded"]["data"] ];
+    "running-command-failed": [ components["schemas"]["PushEventRunningCommandFailed"]["data"] ];
+    "running-command-log": [ components["schemas"]["PushEventRunningCommandLog"]["data"] ];
+    "running-command-warning": [ components["schemas"]["PushEventRunningCommandWarning"]["data"] ];
 }> {
 
     // protected
@@ -150,6 +160,29 @@ export class SDK extends EventEmitter<{
                     break;
                     case "error":
                         this.emit("error", parsedMessage.data);
+                    break;
+
+                    case "registered-command-added":
+                        this.emit("registered-command-added", parsedMessage.data);
+                    break;
+                    case "registered-command-deleted":
+                        this.emit("registered-command-deleted", parsedMessage.data);
+                    break;
+
+                    case "running-command-running":
+                        this.emit("running-command-running", parsedMessage.data);
+                    break;
+                    case "running-command-ended":
+                        this.emit("running-command-ended", parsedMessage.data);
+                    break;
+                    case "running-command-failed":
+                        this.emit("running-command-failed", parsedMessage.data);
+                    break;
+                    case "running-command-log":
+                        this.emit("running-command-log", parsedMessage.data);
+                    break;
+                    case "running-command-warning":
+                        this.emit("running-command-warning", parsedMessage.data);
                     break;
 
                     default:

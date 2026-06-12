@@ -509,6 +509,168 @@
 					}
 				},
 				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRegisteredCommandAdded": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "registered-command-added" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/RegisteredCommand"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRegisteredCommandDeleted": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "registered-command-deleted" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/RegisteredCommand"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandRunning": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-running" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/CommandRunning"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandEnded": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-ended" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/CommandRunning"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandFailed": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-failed" ]
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"$ref": "#/components/schemas/CommandRunning"
+							},
+							"error": {
+								"$ref": "#/components/schemas/Error"
+							}
+						},
+						"required": [ "command", "error" ]
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandLog": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-log" ]
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"$ref": "#/components/schemas/CommandRunning"
+							},
+							"content": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"required": [ "command", "content" ]
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandWarning": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-warning" ]
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"$ref": "#/components/schemas/CommandRunning"
+							},
+							"content": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"required": [ "command", "content" ]
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
 			}
 		}
 	},
