@@ -226,9 +226,81 @@ export class SDK extends EventEmitter<{
 
     }
 
-    public executeCommand (command: components["schemas"]["Command"]["command"]): Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]> {
+    public getRegisteredCommands (): Promise<operations["getRegisteredCommands"]["responses"]["200"]["content"]["application/json"]> {
 
-        const url: keyof paths = "/mia-commands/api/execute";
+        const url: keyof paths = "/mia-commands/api/registered-commands";
+        const method: HttpMethodsOf<typeof url> = "get";
+
+        return fetch(url, {
+            "method": method,
+            "headers": {
+                "Content-Type": "application/json"
+            }
+        }).then((res: Response): Promise<operations["getRegisteredCommands"]["responses"]["200"]["content"]["application/json"]> => {
+
+            return this._parseResponse(res) as Promise<operations["getRegisteredCommands"]["responses"]["200"]["content"]["application/json"]>;
+
+        });
+
+    }
+
+    public registerCommand (command: components["schemas"]["Command"]): Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]> {
+
+        const url: keyof paths = "/mia-commands/api/registered-commands";
+        const method: HttpMethodsOf<typeof url> = "put";
+
+        return fetch(url, {
+            "method": method,
+            "headers": {
+                "Content-Type": "application/json"
+            }
+        }).then((res: Response): Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]> => {
+
+            return this._parseResponse(res) as Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]>;
+
+        });
+
+    }
+
+    public deleteRegisteredCommand (command: components["schemas"]["Command"]): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> {
+
+        const url: keyof paths = "/mia-commands/api/registered-commands";
+        const method: HttpMethodsOf<typeof url> = "delete";
+
+        return fetch(url, {
+            "method": method,
+            "headers": {
+                "Content-Type": "application/json"
+            }
+        }).then((res: Response): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> => {
+
+            return this._parseResponse(res) as Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]>;
+
+        });
+
+    }
+
+    public getRunningCommands (): Promise<operations["getRunningCommands"]["responses"]["200"]["content"]["application/json"]> {
+
+        const url: keyof paths = "/mia-commands/api/running-commands";
+        const method: HttpMethodsOf<typeof url> = "get";
+
+        return fetch(url, {
+            "method": method,
+            "headers": {
+                "Content-Type": "application/json"
+            }
+        }).then((res: Response): Promise<operations["getRunningCommands"]["responses"]["200"]["content"]["application/json"]> => {
+
+            return this._parseResponse(res) as Promise<operations["getRunningCommands"]["responses"]["200"]["content"]["application/json"]>;
+
+        });
+
+    }
+
+    public runCommand (command: components["schemas"]["Command"]): Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]> {
+
+        const url: keyof paths = "/mia-commands/api/running-commands";
         const method: HttpMethodsOf<typeof url> = "put";
 
         return fetch(url, {
@@ -239,9 +311,27 @@ export class SDK extends EventEmitter<{
             "body": JSON.stringify({
                 "command": command
             })
-        }).then((res: Response): Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]> => {
+        }).then((res: Response): Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]> => {
 
-            return this._parseResponse(res) as Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]>;
+            return this._parseResponse(res) as Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]>;
+
+        });
+
+    }
+
+    public stopRunningCommand (command: components["schemas"]["Command"]): Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]> {
+
+        const url: keyof paths = "/mia-commands/api/running-commands";
+        const method: HttpMethodsOf<typeof url> = "delete";
+
+        return fetch(url, {
+            "method": method,
+            "headers": {
+                "Content-Type": "application/json"
+            }
+        }).then((res: Response): Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]> => {
+
+            return this._parseResponse(res) as Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]>;
 
         });
 

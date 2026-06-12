@@ -165,17 +165,146 @@
 			}
 		},
 
-		"/mia-commands/api/execute": {
+		"/mia-commands/api/registered-commands": {
+			"get": {
+				"description": "",
+				"summary": "Get all registered commands",
+				"operationId": "getRegisteredCommands",
+				"responses": {
+					"200": {
+						"description": "All registered commands",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RegisteredCommand"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
 			"put": {
 				"description": "",
-				"summary": "Execute a new command",
-				"operationId": "executeCommand",
+				"summary": "Register a new command",
+				"operationId": "registerCommand",
 				"requestBody": {
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Command"
+								"$ref": "#/components/schemas/RegisteredCommand"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Command is registered",
+						"content": {
+							"application/json": {}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "",
+				"summary": "Delete a registered command",
+				"operationId": "deleteRegisteredCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisteredCommand"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Registered command deleted",
+						"content": {
+							"application/json": {}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/mia-commands/api/running-commands": {
+			"get": {
+				"description": "",
+				"summary": "Get all running commands",
+				"operationId": "getRunningCommands",
+				"responses": {
+					"200": {
+						"description": "All running commands",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/CommandRunning"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "",
+				"summary": "Run a new command",
+				"operationId": "runCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisteredCommand"
 							}
 						}
 					}
@@ -189,6 +318,39 @@
 									"$ref": "#/components/schemas/CommandRunning"
 								}
 							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "",
+				"summary": "Stop a running command",
+				"operationId": "stopRunningCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisteredCommand"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Running command stopped",
+						"content": {
+							"application/json": {}
 						}
 					},
 					"default": {
@@ -228,18 +390,60 @@
 			"Command": {
 				"type": "object",
 				"properties": {
-					"command": {
+					"binary": {
+						"description": "= command",
 						"type": "string",
 						"minLength": 1
+					},
+					"arguments": {
+						"description": "= args",
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					},
+					"workingDirectory": {
+						"description": "= options/cwd",
+						"type": "string",
+						"minLength": 1
+					},
+					"environmentVariables": {
+						"description": "= options/env",
+						"type": "object",
+						"additionalProperties": true
+					},
+					"detached": {
+						"type": "boolean"
+					},
+					"windowsHide": {
+						"type": "boolean"
+					},
+					"timeout": {
+						"type": "number",
+						"minimum": 100
 					}
 				},
-				"required": [ "command" ]
+				"required": [ "binary" ]
+			},
+			"RegisteredCommand": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1
+					},
+					"command": {
+						"$ref": "#/components/schemas/Command"
+					}
+				},
+				"required": [ "name", "command" ]
 			},
 			"CommandRunning": {
 				"type": "object",
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/Command"
+						"$ref": "#/components/schemas/RegisteredCommand"
 					},
 					{
 						"properties": {

@@ -27,4 +27,11 @@ export default class OrchestratorCommands extends Orchestrator {
 
     }
 
+    public _initWorkSpace (): Promise<void> {
+
+        // @TODO : ensure file for registered commands exists
+
+        return Promise.resolve();
+    }
+
 }

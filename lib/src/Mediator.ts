@@ -34,19 +34,11 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
     // constructor
 
     protected _initWorkSpace (): Promise<void> {
-
-        // <init work space>
-
         return Promise.resolve();
-
     }
 
     protected _releaseWorkSpace (): Promise<void> {
-
-        // <release work space>
-
         return Promise.resolve();
-
     }
 
     // front files
@@ -85,10 +77,37 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
     // <api>
 
-    public executeCommand (
-        urlParams: operations["executeCommand"]["parameters"],
-        bodyParams: operations["executeCommand"]["requestBody"]["content"]["application/json"]
-    ): Promise<operations["executeCommand"]["responses"]["201"]["content"]["application/json"]> {
+    // @TODO
+    public getRegisteredCommands (): Promise<operations["getRegisteredCommands"]["responses"]["200"]["content"]["application/json"]> {
+        return Promise.resolve([]);
+    }
+
+    // @TODO
+    public registerCommand (
+        urlParams: operations["registerCommand"]["parameters"],
+        bodyParams: operations["registerCommand"]["requestBody"]["content"]["application/json"]
+    ): Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]> {
+        return Promise.resolve();
+    }
+
+    // @TODO
+    public deleteRegisteredCommand (
+        urlParams: operations["deleteRegisteredCommand"]["parameters"],
+        bodyParams: operations["deleteRegisteredCommand"]["requestBody"]["content"]["application/json"]
+    ): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> {
+        return Promise.resolve();
+    }
+
+    // @TODO
+    public getRunningCommands (): Promise<operations["getRunningCommands"]["responses"]["200"]["content"]["application/json"]> {
+        return Promise.resolve([]);
+    }
+
+    // @TODO
+    public runCommand (
+        urlParams: operations["runCommand"]["parameters"],
+        bodyParams: operations["runCommand"]["requestBody"]["content"]["application/json"]
+    ): Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]> {
 
         const newCommand: components["schemas"]["CommandRunning"] = {
             "id": uniqid(),
@@ -108,6 +127,14 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
         return Promise.resolve(newCommand);
 
+    }
+
+    // @TODO
+    public stopRunningCommand (
+        urlParams: operations["stopRunningCommand"]["parameters"],
+        bodyParams: operations["stopRunningCommand"]["requestBody"]["content"]["application/json"]
+    ): Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]> {
+        return Promise.resolve();
     }
 
 }
