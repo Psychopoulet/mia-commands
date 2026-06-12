@@ -2,9 +2,14 @@
 
     // natives
     import { join } from "node:path";
+    import { writeFile, mkdir, rm } from "node:fs/promises";
 
     // externals
     import { Orchestrator } from "node-pluginsmanager-plugin";
+
+    // locals
+    import isFile from "./utils/isFile";
+    import isDirectory from "./utils/isDirectory";
 
 // types & interfaces
 
@@ -27,11 +32,52 @@ export default class OrchestratorCommands extends Orchestrator {
 
     }
 
-    public _initWorkSpace (): Promise<void> {
+    protected _initWorkSpace (): Promise<void> {
 
-        // @TODO : ensure file for registered commands exists
+        return this.install();
 
-        return Promise.resolve();
+    }
+
+    public install (): Promise<void> {
+
+        return isDirectory(this._externalResourcesDirectory).then((check: boolean): Promise<string | undefined> => {
+
+            if (check) {
+                return Promise.resolve("");
+            }
+
+            return mkdir(this._externalResourcesDirectory, { "recursive": true });
+
+        }).then((): Promise<void> => {
+
+            const registeredCommandsFile = join(this._externalResourcesDirectory, "registeredCommands.json");
+
+            return isFile(registeredCommandsFile).then((check: boolean): Promise<void> => {
+
+                if (check) {
+                    return Promise.resolve();
+                }
+
+                return writeFile(registeredCommandsFile, "[]", "utf-8");
+
+            });
+
+        });
+
+    }
+
+    public uninstall (): Promise<void> {
+
+        return isDirectory(this._externalResourcesDirectory).then((check: boolean): Promise<void> | void => {
+
+            if (check) {
+                return Promise.resolve();
+            }
+
+            return rm(this._externalResourcesDirectory, { "recursive": true });
+
+        });
+
     }
 
 }
