@@ -58,7 +58,7 @@
   },
 
   "dependencies": {
-    "node-pluginsmanager-plugin": "7.3.2",
+    "node-pluginsmanager-plugin": "7.4.0",
     "uniqid": "5.4.0"
   },
   "devDependencies": {
