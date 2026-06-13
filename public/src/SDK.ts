@@ -277,37 +277,41 @@ export class SDK extends EventEmitter<{
 
     }
 
-    public registerCommand (command: components["schemas"]["Command"]): Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]> {
+    public registerCommand (command: components["schemas"]["RegisteredCommand"]): Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]> {
 
         const url: keyof paths = "/mia-commands/api/registered-commands";
         const method: HttpMethodsOf<typeof url> = "put";
+        const body: operations["registerCommand"]["requestBody"]["content"]["application/json"] = command;
 
         return fetch(url, {
             "method": method,
             "headers": {
                 "Content-Type": "application/json"
-            }
+            },
+            "body": JSON.stringify(body)
         }).then((res: Response): Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]> => {
 
-            return this._parseResponse(res) as Promise<operations["registerCommand"]["responses"]["201"]["content"]["application/json"]>;
+            return this._parseResponse(res);
 
         });
 
     }
 
-    public deleteRegisteredCommand (command: components["schemas"]["Command"]): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> {
+    public deleteRegisteredCommand (command: components["schemas"]["RegisteredCommand"]): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> {
 
         const url: keyof paths = "/mia-commands/api/registered-commands";
         const method: HttpMethodsOf<typeof url> = "delete";
+        const body: operations["deleteRegisteredCommand"]["requestBody"]["content"]["application/json"] = command;
 
         return fetch(url, {
             "method": method,
             "headers": {
                 "Content-Type": "application/json"
-            }
+            },
+            "body": JSON.stringify(body)
         }).then((res: Response): Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]> => {
 
-            return this._parseResponse(res) as Promise<operations["deleteRegisteredCommand"]["responses"]["204"]["content"]["application/json"]>;
+            return this._parseResponse(res);
 
         });
 
@@ -331,19 +335,18 @@ export class SDK extends EventEmitter<{
 
     }
 
-    public runCommand (command: components["schemas"]["Command"]): Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]> {
+    public runCommand (command: components["schemas"]["RegisteredCommand"]): Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]> {
 
         const url: keyof paths = "/mia-commands/api/running-commands";
         const method: HttpMethodsOf<typeof url> = "put";
+        const body: operations["runCommand"]["requestBody"]["content"]["application/json"] = command;
 
         return fetch(url, {
             "method": method,
             "headers": {
                 "Content-Type": "application/json"
             },
-            "body": JSON.stringify({
-                "command": command
-            })
+            "body": JSON.stringify(body)
         }).then((res: Response): Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]> => {
 
             return this._parseResponse(res) as Promise<operations["runCommand"]["responses"]["201"]["content"]["application/json"]>;
@@ -352,19 +355,21 @@ export class SDK extends EventEmitter<{
 
     }
 
-    public stopRunningCommand (command: components["schemas"]["Command"]): Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]> {
+    public stopRunningCommand (command: components["schemas"]["RunningCommand"]): Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]> {
 
         const url: keyof paths = "/mia-commands/api/running-commands";
         const method: HttpMethodsOf<typeof url> = "delete";
+        const body: operations["stopRunningCommand"]["requestBody"]["content"]["application/json"] = command;
 
         return fetch(url, {
             "method": method,
             "headers": {
                 "Content-Type": "application/json"
-            }
+            },
+            "body": JSON.stringify(body)
         }).then((res: Response): Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]> => {
 
-            return this._parseResponse(res) as Promise<operations["stopRunningCommand"]["responses"]["204"]["content"]["application/json"]>;
+            return this._parseResponse(res);
 
         });
 

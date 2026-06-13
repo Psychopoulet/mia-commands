@@ -15,6 +15,7 @@
     // locals
     import type { SDK } from "./SDK";
     import type { components, operations } from "./Descriptor";
+    import RegisteredCommands from "./components/RegisteredCommands";
 
     interface iState {
         "status": "CONNECTED" | "DISCONNECTED" | operations["getPluginStatus"]["responses"]["200"]["content"]["application/json"];
@@ -115,6 +116,16 @@ export default class App extends React.Component<iPropsNode, iState> {
 
     // interface handlers
 
+    private readonly _handleError = (err: Error): void => {
+
+        this.setState({
+            "error": {
+                "code": "UNKNOWN_ERROR",
+                "message": err.message
+            }
+        });
+    };
+
     private readonly _handleCloseError = (e: React.MouseEvent<HTMLButtonElement>): void => {
 
         e.preventDefault();
@@ -168,7 +179,15 @@ export default class App extends React.Component<iPropsNode, iState> {
                     </ModalBody>
                 </Modal> }
 
-                <span>Hello World !</span>
+                <div className="row">
+
+                    <div className="col-12 col-md-4 col-lg-3">
+
+                        <RegisteredCommands onError={ this._handleError } />
+
+                    </div>
+
+                </div>
 
             </div>;
 
