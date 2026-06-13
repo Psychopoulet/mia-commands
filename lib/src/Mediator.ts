@@ -42,7 +42,7 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
     // private
 
         private readonly _runningCommands: Array<components["schemas"]["RunningCommand"]> = [];
-        private _registeredCommandsFile: string;
+        private readonly _registeredCommandsFile: string;
 
     // constructor
 
@@ -265,11 +265,11 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
         return new Promise((resolve: (value: unknown) => void, reject: (error: Error) => void): void => {
 
-            if("win32" === process.platform) {
+            if ("win32" === process.platform) {
 
                 exec("taskkill /PID " + bodyParams.pid + " /T /F", { "windowsHide": true }, (err: Error | null, stdout: string): void => {
 
-                    if(err) {
+                    if (err) {
                         return reject(err);
                     }
 
@@ -277,13 +277,13 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
                 });
 
+                return;
+
             }
-            else if (process.kill(bodyParams.pid, "SIGTERM")) {
-                return resolve("ok");
-            }
-            else {
-                return reject(new Error("Impossible to stop command '" + bodyParams.pid + "'"));
-            }
+
+            process.kill(bodyParams.pid, "SIGTERM");
+
+            resolve("ok");
 
         }).then((): void => {
 
