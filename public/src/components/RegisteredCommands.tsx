@@ -11,6 +11,7 @@
     // locals
     import getSDK from "../SDK";
     import AddRegisterCommand from "./AddRegisterCommand";
+    import RegisteredCommand from "./RegisteredCommand";
 
 // types & interfaces
 
@@ -138,19 +139,6 @@ export default class RegisteredCommands extends React.Component<iProps, iState> 
 
     };
 
-    private readonly _handleDeleteRegisteredCommand = (e: React.MouseEvent<HTMLButtonElement>, command: components["schemas"]["RegisteredCommand"]): void => {
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        this._sdk.deleteRegisteredCommand(command).catch((err: Error): void => {
-
-            this.props.onError(err);
-
-        });
-
-    };
-
     // render
 
     public render (): React.JSX.Element {
@@ -173,11 +161,9 @@ export default class RegisteredCommands extends React.Component<iProps, iState> 
 
                     { !this.state.loading && 0 < this.state.registeredCommands.length && this.state.registeredCommands.map((command: components["schemas"]["RegisteredCommand"]): React.JSX.Element => {
 
-                        return <ListItem key={ command.name } justify>
-                            { command.name } <Button icon="trash" variant="danger" outline size="sm" onClick={ (e: React.MouseEvent<HTMLButtonElement>): void => {
-                                return this._handleDeleteRegisteredCommand(e, command);
-                            } } />
-                        </ListItem>;
+                        return <RegisteredCommand key={ command.name } command={ command }
+                            onError={ this.props.onError }
+                        />;
 
                     }) }
 
