@@ -3,12 +3,12 @@
     // externals
     import React from "react";
     import {
-        Modal, ModalList,
         ListItem, ButtonGroup, Button
     } from "react-bootstrap-fontawesome";
 
     // locals
     import getSDK from "../../SDK";
+    import CommandDetails from "../CommandDetails";
 
 // types & interfaces
 
@@ -110,57 +110,7 @@ export default class RegisteredCommand extends React.Component<iProps, iState> {
 
         return <>
 
-            { this.state.detailsModalOpened && <Modal appId="{{plugin.name}}-app" title={ this.props.command.name + " command details" }
-                variant="info" centered
-                onClose={ this._handleCloseDetailsRegisteredCommand }
-            >
-
-                <ModalList>
-
-                    <ListItem variant="secondary">
-                        { this.props.command.command.binary } { this.props.command.command.arguments?.join(" ") }
-                    </ListItem>
-
-                    { "string" === typeof this.props.command.command.workingDirectory && <ListItem justify>
-                        <span>Working directory</span> { this.props.command.command.workingDirectory }
-                    </ListItem> }
-
-                    { this.props.command.command.environmentVariables && <ListItem justify>
-
-                        <span>Environment variables</span> <span>
-
-                            {
-
-                                Object.entries(this.props.command.command.environmentVariables).map(([ key, value ]: [string, string], index: number): React.JSX.Element => {
-
-                                    return <>
-                                        { 0 < index && <br /> }
-                                        <span key={ key }>{ key } = { value }</span>
-                                    </>;
-
-                                })
-
-                            }
-
-                        </span>
-
-                    </ListItem> }
-
-                    { "boolean" === typeof this.props.command.command.detached && <ListItem justify>
-                        <span>Detached</span> { this.props.command.command.detached ? "Yes" : "No" }
-                    </ListItem> }
-
-                    { "boolean" === typeof this.props.command.command.windowsHide && <ListItem justify>
-                        <span>Windows hide</span> { this.props.command.command.windowsHide ? "Yes" : "No" }
-                    </ListItem> }
-
-                    { "number" === typeof this.props.command.command.timeout && <ListItem justify>
-                        <span>Timeout</span> { this.props.command.command.timeout }
-                    </ListItem> }
-
-                </ModalList>
-
-            </Modal> }
+            { this.state.detailsModalOpened && <CommandDetails command={ this.props.command } onClose={ this._handleCloseDetailsRegisteredCommand } /> }
 
             <ListItem justify>
 

@@ -257,9 +257,6 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     public render (): React.JSX.Element {
 
-        // @TODO : arguments
-        // @TODO : environment
-
         return <Modal appId="{{plugin.name}}-app" title="Add Registered Command" centered
             onClose={ this.props.onClose }
             onSubmit={ this._handleSubmitAddRegisteredCommand }

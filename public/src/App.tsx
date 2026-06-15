@@ -16,6 +16,7 @@
     import type { SDK } from "./SDK";
     import type { components, operations } from "./Descriptor";
     import RegisteredCommands from "./components/RegisteredCommands";
+    import RunningCommands from "./components/RunningCommands";
 
     interface iState {
         "status": "CONNECTED" | "DISCONNECTED" | operations["getPluginStatus"]["responses"]["200"]["content"]["application/json"];
@@ -182,9 +183,11 @@ export default class App extends React.Component<iPropsNode, iState> {
                 <div className="row">
 
                     <div className="col-12 col-md-4 col-lg-3">
-
                         <RegisteredCommands onError={ this._handleError } />
+                    </div>
 
+                    <div className="col-12 col-md-8 col-lg-9">
+                        <RunningCommands onError={ this._handleError } />
                     </div>
 
                 </div>
