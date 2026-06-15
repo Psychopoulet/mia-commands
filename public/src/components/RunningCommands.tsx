@@ -139,7 +139,7 @@ export default class RunningCommands extends React.Component<iProps, iState> {
             { this.state.runningcommands.map((command: components["schemas"]["RunningCommand"]): React.JSX.Element => {
 
                 return <div className="col">
-                    <RunningCommand key={ command.name } command={ command } onError={ this.props.onError } />
+                    <RunningCommand key={ command.pid } command={ command } onError={ this.props.onError } />
                 </div>;
 
             }) }

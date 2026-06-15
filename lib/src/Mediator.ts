@@ -12,6 +12,9 @@
         ConflictError, NotFoundError
     } from "node-pluginsmanager-plugin";
 
+    // locals
+    import getProcessEnv from "./utils/getProcessEnv";
+
 // types & interfaces
 
     // natives
@@ -42,6 +45,7 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
     // private
 
         private readonly _runningCommands: Array<components["schemas"]["RunningCommand"]> = [];
+        private readonly _stoppingPids: Set<number> = new Set();
         private readonly _registeredCommandsFile: string;
 
     // constructor
@@ -171,7 +175,7 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
             options.cwd = bodyParams.command.workingDirectory;
         }
         if (isPlainObject(bodyParams.command.environmentVariables)) {
-            options.env = bodyParams.command.environmentVariables;
+            options.env = { ...getProcessEnv(), ...bodyParams.command.environmentVariables };
         }
         if ("boolean" === typeof bodyParams.command.detached) {
             options.detached = bodyParams.command.detached;
@@ -199,21 +203,25 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
         childProcess.on("error", (err: Error): void => {
             error = err.message;
-        }).on("close", (code: number, signal: string): void => {
+        }).on("close", (code: number | null, signal: string | null): void => {
 
-            if (0 !== code) {
+            const wasStopping: boolean = this._stoppingPids.delete(newCommand.pid);
+
+            if (wasStopping || 0 === code) {
+
+                this.emit("running-command-ended", newCommand);
+
+            }
+            else {
 
                 this.emit("running-command-failed", {
                     "command": newCommand,
                     "error": {
-                        "code": signal,
+                        "code": signal ?? "UNKNOWN",
                         "message": error
                     }
                 });
 
-            }
-            else {
-                this.emit("running-command-ended", newCommand);
             }
 
             const index: number = this._runningCommands.findIndex((command: components["schemas"]["RunningCommand"]): boolean => {
@@ -221,7 +229,7 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
             });
 
             if (-1 !== index) {
-                this._runningCommands.splice(index);
+                this._runningCommands.splice(index, 1);
             }
 
         });
@@ -263,6 +271,8 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
             throw new NotFoundError("Command '" + bodyParams.name + "' not found");
         }
 
+        this._stoppingPids.add(bodyParams.pid);
+
         return new Promise((resolve: (value: unknown) => void, reject: (error: Error) => void): void => {
 
             if ("win32" === process.platform) {
@@ -281,15 +291,26 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
             }
 
-            process.kill(bodyParams.pid, "SIGTERM");
+            try {
 
-            resolve("ok");
+                process.kill(bodyParams.pid, "SIGTERM");
 
-        }).then((): void => {
+                resolve("ok");
+
+            }
+            catch (err: unknown) {
+
+                reject(err instanceof Error ? err : new Error(String(err)));
+
+            }
+
+        }).catch((err: Error): Error => {
 
             // no need to remove the command from the list because it will be removed by the "close" event
 
-            this.emit("running-command-stopped", bodyParams);
+            this._stoppingPids.delete(bodyParams.pid);
+
+            return err;
 
         });
 

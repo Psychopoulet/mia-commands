@@ -66,7 +66,7 @@ export default class OrchestratorCommands extends Orchestrator {
 
         return isDirectory(this._externalResourcesDirectory).then((check: boolean): Promise<void> | void => {
 
-            if (check) {
+            if (!check) {
                 return Promise.resolve();
             }
 
