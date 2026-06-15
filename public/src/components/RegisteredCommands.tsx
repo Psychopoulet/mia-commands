@@ -10,8 +10,8 @@
 
     // locals
     import getSDK from "../SDK";
-    import AddRegisterCommand from "./AddRegisterCommand";
-    import RegisteredCommand from "./RegisteredCommand";
+    import AddRegisterCommand from "./RegisteredCommand/AddRegisterCommand";
+    import RegisteredCommand from "./RegisteredCommand/RegisteredCommand";
 
 // types & interfaces
 

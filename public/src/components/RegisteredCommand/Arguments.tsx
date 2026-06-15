@@ -14,12 +14,12 @@
     import type { iPropsInput } from "react-bootstrap-fontawesome";
 
     // locals
-    import type { components } from "../Descriptor";
+    import type { components } from "../../Descriptor";
 
     interface iProps extends iPropsInput {
         "label": string;
         "arguments": components["schemas"]["Command"]["arguments"];
-        "onSave": (values: string[]) => void;
+        "onSave": (values: components["schemas"]["Command"]["arguments"]) => void;
     }
 
     interface iState {
@@ -58,7 +58,8 @@ export default class Arguments extends React.Component<iProps, iState> {
         e.stopPropagation();
 
         this.setState({
-            "openArgumentsArray": false
+            "openArgumentsArray": false,
+            "arguments": this.state.arguments
         });
 
         this.props.onSave(this.state.arguments);

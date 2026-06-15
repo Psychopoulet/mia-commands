@@ -8,7 +8,7 @@
     } from "react-bootstrap-fontawesome";
 
     // locals
-    import getSDK from "../SDK";
+    import getSDK from "../../SDK";
 
 // types & interfaces
 
@@ -16,8 +16,8 @@
     import type { iPropsNode } from "react-bootstrap-fontawesome";
 
     // locals
-    import type { SDK } from "../SDK";
-    import type { components } from "../Descriptor";
+    import type { SDK } from "../../SDK";
+    import type { components } from "../../Descriptor";
 
     interface iProps extends iPropsNode {
         "command": components["schemas"]["RegisteredCommand"];

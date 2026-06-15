@@ -9,8 +9,9 @@
     } from "react-bootstrap-fontawesome";
 
     // locals
-    import getSDK from "../SDK";
+    import getSDK from "../../SDK";
     import Arguments from "./Arguments";
+    import EnvironmentVariables from "./EnvironmentVariables";
 
 // types & interfaces
 
@@ -18,8 +19,8 @@
     import type { iPropsNode } from "react-bootstrap-fontawesome";
 
     // locals
-    import type { SDK } from "../SDK";
-    import type { components } from "../Descriptor";
+    import type { SDK } from "../../SDK";
+    import type { components } from "../../Descriptor";
 
     interface iProps extends iPropsNode {
         "onClose": (e?: React.MouseEvent<HTMLButtonElement>) => void;
@@ -65,7 +66,7 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     // interface handlers
 
-    private readonly _handleChangeAddRegisteredCommandName = (e: React.ChangeEvent<HTMLInputElement>, value: string): void => {
+    private readonly _handleChangeAddRegisteredCommandName = (e: React.ChangeEvent<HTMLInputElement>, value: components["schemas"]["RegisteredCommand"]["name"]): void => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -79,7 +80,7 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     };
 
-    private readonly _handleChangeAddRegisteredCommandBinary = (e: React.ChangeEvent<HTMLInputElement>, value: string): void => {
+    private readonly _handleChangeAddRegisteredCommandBinary = (e: React.ChangeEvent<HTMLInputElement>, value: components["schemas"]["Command"]["binary"]): void => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -96,7 +97,7 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     };
 
-    private readonly _handleChangeAddRegisteredCommandArguments = (values: string[]): void => {
+    private readonly _handleChangeAddRegisteredCommandArguments = (values: components["schemas"]["Command"]["arguments"]): void => {
 
         this.setState({
             "addRegisteredCommand": {
@@ -110,7 +111,7 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     };
 
-    private readonly _handleChangeAddRegisteredCommandWorkingDirectory = (e: React.ChangeEvent<HTMLInputElement>, value: string): void => {
+    private readonly _handleChangeAddRegisteredCommandWorkingDirectory = (e: React.ChangeEvent<HTMLInputElement>, value: components["schemas"]["Command"]["workingDirectory"]): void => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -127,7 +128,21 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     };
 
-    private readonly _handleChangeAddRegisteredCommandDetached = (e: React.ChangeEvent<HTMLInputElement>, value: boolean): void => {
+    private readonly _handleChangeAddRegisteredCommandEnvironmentVariables = (values: components["schemas"]["Command"]["environmentVariables"]): void => {
+
+        this.setState({
+            "addRegisteredCommand": {
+                ...this.state.addRegisteredCommand,
+                "command": {
+                    ...this.state.addRegisteredCommand.command,
+                    "environmentVariables": values
+                }
+            }
+        });
+
+    };
+
+    private readonly _handleChangeAddRegisteredCommandDetached = (e: React.ChangeEvent<HTMLInputElement>, value: components["schemas"]["Command"]["detached"]): void => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -144,7 +159,7 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     };
 
-    private readonly _handleChangeAddRegisteredCommandWindowsHide = (e: React.ChangeEvent<HTMLInputElement>, value: boolean): void => {
+    private readonly _handleChangeAddRegisteredCommandWindowsHide = (e: React.ChangeEvent<HTMLInputElement>, value: components["schemas"]["Command"]["windowsHide"]): void => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -161,7 +176,7 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
     };
 
-    private readonly _handleChangeAddRegisteredCommandTimeout = (e: React.ChangeEvent<HTMLInputElement>, value: number): void => {
+    private readonly _handleChangeAddRegisteredCommandTimeout = (e: React.ChangeEvent<HTMLInputElement>, value: components["schemas"]["Command"]["timeout"]): void => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -268,7 +283,9 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
                     value={ this.state.addRegisteredCommand.command.workingDirectory } onChange={ this._handleChangeAddRegisteredCommandWorkingDirectory }
                 />
 
-                <InputTextLabel id="add-registered-command-environmentVariables" label="Environment variables" disabled={ this.state.running } />
+                <EnvironmentVariables id="add-registered-command-environmentVariables" label="Environment variables" disabled={ this.state.running }
+                    environmentVariables={ this.state.addRegisteredCommand.command.environmentVariables } onSave={ this._handleChangeAddRegisteredCommandEnvironmentVariables }
+                />
 
                 <CheckBoxLabel id="add-registered-command-detached" label="Detached" disabled={ this.state.running }
                     checked={ this.state.addRegisteredCommand.command.detached } onToogle={ this._handleChangeAddRegisteredCommandDetached }
