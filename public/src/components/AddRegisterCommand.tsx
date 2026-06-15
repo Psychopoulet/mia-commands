@@ -10,6 +10,7 @@
 
     // locals
     import getSDK from "../SDK";
+    import Arguments from "./Arguments";
 
 // types & interfaces
 
@@ -89,6 +90,20 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
                 "command": {
                     ...this.state.addRegisteredCommand.command,
                     "binary": value
+                }
+            }
+        });
+
+    };
+
+    private readonly _handleChangeAddRegisteredCommandArguments = (values: string[]): void => {
+
+        this.setState({
+            "addRegisteredCommand": {
+                ...this.state.addRegisteredCommand,
+                "command": {
+                    ...this.state.addRegisteredCommand.command,
+                    "arguments": values
                 }
             }
         });
@@ -237,33 +252,33 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
             <ModalBody>
 
-                <InputTextLabel label="Name" disabled={ this.state.running }
+                <InputTextLabel id="add-registered-command-name" label="Name" disabled={ this.state.running }
                     value={ this.state.addRegisteredCommand.name } onChange={ this._handleChangeAddRegisteredCommandName }
                 />
 
-                <InputTextLabel label="Binary" disabled={ this.state.running }
+                <InputTextLabel id="add-registered-command-binary" label="Binary" disabled={ this.state.running }
                     value={ this.state.addRegisteredCommand.command.binary } onChange={ this._handleChangeAddRegisteredCommandBinary }
                 />
 
-                <InputTextLabel label="Arguments" disabled={ this.state.running }
-                    value={ this.state.addRegisteredCommand.command.arguments?.join(", ") }
+                <Arguments id="add-registered-command-arguments" label="Arguments" disabled={ this.state.running }
+                    arguments={ this.state.addRegisteredCommand.command.arguments } onSave={ this._handleChangeAddRegisteredCommandArguments }
                 />
 
-                <InputTextLabel label="Working directory" disabled={ this.state.running }
+                <InputTextLabel id="add-registered-command-workingDirectory" label="Working directory" disabled={ this.state.running }
                     value={ this.state.addRegisteredCommand.command.workingDirectory } onChange={ this._handleChangeAddRegisteredCommandWorkingDirectory }
                 />
 
-                <InputTextLabel label="Environment variables" disabled={ this.state.running } />
+                <InputTextLabel id="add-registered-command-environmentVariables" label="Environment variables" disabled={ this.state.running } />
 
-                <CheckBoxLabel label="Detached" disabled={ this.state.running }
+                <CheckBoxLabel id="add-registered-command-detached" label="Detached" disabled={ this.state.running }
                     checked={ this.state.addRegisteredCommand.command.detached } onToogle={ this._handleChangeAddRegisteredCommandDetached }
                 />
 
-                <CheckBoxLabel label="Windows hide" disabled={ this.state.running }
+                <CheckBoxLabel id="add-registered-command-windowsHide" label="Windows hide" disabled={ this.state.running }
                     checked={ this.state.addRegisteredCommand.command.windowsHide } onToogle={ this._handleChangeAddRegisteredCommandWindowsHide }
                 />
 
-                <InputIntegerLabel label="Timeout" disabled={ this.state.running }
+                <InputIntegerLabel id="add-registered-command-timeout" label="Timeout" disabled={ this.state.running }
                     value={ this.state.addRegisteredCommand.command.timeout ?? 0 } onChange={ this._handleChangeAddRegisteredCommandTimeout }
                 />
 
@@ -271,7 +286,10 @@ export default class AddRegisterCommand extends React.Component<iProps, iState> 
 
             <ModalFooter>
 
-                <Button type="submit" icon="save" variant="success" block disabled={ this.state.running }>
+                <Button type="submit"
+                    icon="save" variant="success" block
+                    disabled={ this.state.running }
+                >
                     Add
                 </Button>
 
