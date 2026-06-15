@@ -170,7 +170,7 @@ export default class RunningCommand extends React.Component<iProps, iState> {
 
                 <CardHeader justify>
 
-                    { this.props.command.name }
+                    <span>{ this.props.command.name } ({ this.props.command.pid })</span>
 
                     <ButtonGroup>
 
