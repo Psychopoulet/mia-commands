@@ -71,8 +71,7 @@ export class SDK extends EventEmitter<{
                         return resolve(content);
                     }
 
-                }).catch((err: Error): void => {
-                    console.warn(err);
+                }).catch((): void => {
                     return reject(new Error("Impossible to parse response"));
                 });
 

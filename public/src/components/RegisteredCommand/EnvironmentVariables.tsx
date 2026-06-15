@@ -61,9 +61,6 @@ export default class EnvironmentVariables extends React.Component<iProps, iState
 
         try {
 
-            console.log("environmentVariablesString", this.state.environmentVariablesString);
-            console.log("environmentVariables", this.state.environmentVariables);
-
             const environmentVariables: components["schemas"]["Command"]["environmentVariables"] = JSON.parse(this.state.environmentVariablesString) as components["schemas"]["Command"]["environmentVariables"];
 
             this.setState({
@@ -74,8 +71,8 @@ export default class EnvironmentVariables extends React.Component<iProps, iState
             this.props.onSave(environmentVariables);
 
         }
-        catch (err: unknown) {
-            console.error(err);
+        catch (err: unknown) { // eslint-disable-line @typescript-eslint/no-unused-vars
+            // nothing to do here
         }
 
     };

@@ -32,8 +32,6 @@ export default class CommandDetails extends React.Component<iProps> {
 
     public render (): React.JSX.Element {
 
-        console.log(this.props.command);
-
         return <Modal appId="{{plugin.name}}-app" title={ this.props.command.name + " command details" }
             variant="info" centered
             onClose={ this.props.onClose }
