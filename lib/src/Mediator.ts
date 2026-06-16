@@ -199,10 +199,10 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
 
         this.emit("running-command-running", newCommand);
 
-        let error: string = "";
+        let lastError: string = "";
 
         childProcess.on("error", (err: Error): void => {
-            error = err.message;
+            lastError = err.message;
         }).on("close", (code: number | null, signal: string | null): void => {
 
             const wasStopping: boolean = this._stoppingPids.delete(newCommand.pid);
@@ -218,7 +218,7 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
                     "command": newCommand,
                     "error": {
                         "code": signal ?? "UNKNOWN",
-                        "message": error
+                        "message": lastError
                     }
                 });
 
@@ -247,6 +247,10 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
         childProcess.stderr?.setEncoding("utf-8");
         childProcess.stderr?.on("data", (data: string): void => {
 
+            if ("" === lastError) {
+                lastError = data;
+            }
+
             this.emit("running-command-warning", {
                 "command": newCommand,
                 "content": data
@@ -268,7 +272,7 @@ export default class MediatorCommands extends Mediator<iEventsMinimal & {
         });
 
         if (-1 === index) {
-            throw new NotFoundError("Command '" + bodyParams.name + "' not found");
+            throw new NotFoundError("Command '" + bodyParams.name + "' with pid '" + bodyParams.pid + "' not found");
         }
 
         this._stoppingPids.add(bodyParams.pid);
