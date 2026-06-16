@@ -50,6 +50,18 @@ export default class Arguments extends React.Component<iProps, iState> {
 
     }
 
+    public componentDidUpdate (prevProps: iProps): void {
+
+        if (prevProps.arguments !== this.props.arguments) {
+
+            this.setState({
+                "arguments": this.props.arguments ?? []
+            });
+
+        }
+
+    }
+
     // interface handlers
 
     private readonly _handleSubmitModal = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>): void => {

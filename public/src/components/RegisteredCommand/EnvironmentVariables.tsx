@@ -52,6 +52,19 @@ export default class EnvironmentVariables extends React.Component<iProps, iState
 
     }
 
+    public componentDidUpdate (prevProps: iProps): void {
+
+        if (prevProps.environmentVariables !== this.props.environmentVariables) {
+
+            this.setState({
+                "environmentVariables": this.props.environmentVariables,
+                "environmentVariablesString": JSON.stringify(this.props.environmentVariables ?? {})
+            });
+
+        }
+
+    }
+
     // interface handlers
 
     private readonly _handleSubmitModal = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>): void => {
