@@ -1,0 +1,685 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "mia-commands",
+		"version": "1.0.0",
+		"description": "Command executer plugin for MIA."
+	},
+	"paths": {
+		"/mia-commands/api/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Plugin's descriptor",
+				"operationId": "getPluginDescriptor",
+				"responses": {
+					"200": {
+						"description": "Plugin's descriptor",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/mia-commands/api/status": {
+			"get": {
+				"description": "",
+				"summary": "Plugin's status",
+				"operationId": "getPluginStatus",
+				"responses": {
+					"200": {
+						"description": "Plugin's status",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"enum": [ "ENABLED", "INITIALIZED", "RELEASED" ]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The plugin is not enabled (=RELEASED)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/mia-commands/public/index.html": {
+			"get": {
+				"description": "",
+				"summary": "Plugin's front",
+				"operationId": "getFrontIndex",
+				"responses": {
+					"200": {
+						"description": "Plugin's front",
+						"content": {
+							"text/html": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/mia-commands/public/bundle.min.js": {
+			"get": {
+				"description": "",
+				"summary": "Plugin's front app",
+				"operationId": "getFrontApp",
+				"responses": {
+					"200": {
+						"description": "Plugin's front app",
+						"content": {
+							"application/javascript": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/mia-commands/public/bundle.min.js.map": {
+			"get": {
+				"description": "",
+				"summary": "Plugin's front app map",
+				"operationId": "getFrontAppMap",
+				"responses": {
+					"200": {
+						"description": "Plugin's front app",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"additionalProperties": true
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/mia-commands/api/registered-commands": {
+			"get": {
+				"description": "",
+				"summary": "Get all registered commands",
+				"operationId": "getRegisteredCommands",
+				"responses": {
+					"200": {
+						"description": "All registered commands",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RegisteredCommand"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "",
+				"summary": "Register a new command",
+				"operationId": "registerCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisteredCommand"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Command is registered",
+						"content": {
+							"application/json": {}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "",
+				"summary": "Delete a registered command",
+				"operationId": "deleteRegisteredCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisteredCommand"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Registered command deleted",
+						"content": {
+							"application/json": {}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/mia-commands/api/running-commands": {
+			"get": {
+				"description": "",
+				"summary": "Get all running commands",
+				"operationId": "getRunningCommands",
+				"responses": {
+					"200": {
+						"description": "All running commands",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RunningCommand"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "",
+				"summary": "Run a new command",
+				"operationId": "runCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisteredCommand"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Running command",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RunningCommand"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "",
+				"summary": "Stop a running command",
+				"operationId": "stopRunningCommand",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RunningCommand"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Running command stopped",
+						"content": {
+							"application/json": {}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	},
+	"components": {
+		"schemas": {
+			"PluginName": {
+				"type": "string",
+				"enum": [ "mia-commands" ]
+			},
+			"Error": {
+				"type": "object",
+				"description": "JSON Error description",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [ "code", "message" ]
+			},
+			"Command": {
+				"type": "object",
+				"properties": {
+					"binary": {
+						"description": "= command",
+						"type": "string",
+						"minLength": 1
+					},
+					"arguments": {
+						"description": "= args",
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					},
+					"workingDirectory": {
+						"description": "= options/cwd",
+						"type": "string",
+						"minLength": 1
+					},
+					"environmentVariables": {
+						"description": "= options/env",
+						"type": "object",
+						"additionalProperties": {
+							"type": "string"
+						}
+					},
+					"detached": {
+						"type": "boolean"
+					},
+					"windowsHide": {
+						"type": "boolean"
+					},
+					"timeout": {
+						"type": "number",
+						"minimum": 100
+					}
+				},
+				"required": [ "binary" ]
+			},
+			"RegisteredCommand": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1
+					},
+					"command": {
+						"$ref": "#/components/schemas/Command"
+					}
+				},
+				"required": [ "name", "command" ]
+			},
+			"RunningCommand": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RegisteredCommand"
+					},
+					{
+						"properties": {
+							"pid": {
+								"type": "number"
+							},
+							"startedAt": {
+								"type": "string",
+								"format": "date-time"
+							}
+						},
+						"required": [ "pid", "startedAt" ]
+					}
+				]
+			},
+			"PushEventPluginInitialized": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "initialized" ]
+					}
+				},
+				"required": [ "id", "plugin", "command" ]
+			},
+			"PushEventPluginReleased": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "released" ]
+					}
+				},
+				"required": [ "id", "plugin", "command" ]
+			},
+			"PushEventPluginError": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "error" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/Error"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRegisteredCommandAdded": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "registered-command-added" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/RegisteredCommand"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRegisteredCommandDeleted": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "registered-command-deleted" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/RegisteredCommand"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandRunning": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-running" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/RunningCommand"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandEnded": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-ended" ]
+					},
+					"data": {
+						"$ref": "#/components/schemas/RunningCommand"
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandFailed": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-failed" ]
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"$ref": "#/components/schemas/RunningCommand"
+							},
+							"error": {
+								"$ref": "#/components/schemas/Error"
+							}
+						},
+						"required": [ "command", "error" ]
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandLog": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-log" ]
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"$ref": "#/components/schemas/RunningCommand"
+							},
+							"content": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"required": [ "command", "content" ]
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			},
+			"PushEventRunningCommandWarning": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"plugin": {
+						"$ref": "#/components/schemas/PluginName"
+					},
+					"command": {
+						"type": "string",
+						"enum": [ "running-command-warning" ]
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"$ref": "#/components/schemas/RunningCommand"
+							},
+							"content": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"required": [ "command", "content" ]
+					}
+				},
+				"required": [ "id", "plugin", "command", "data" ]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://localhost:8000/",
+			"description": "test server"
+		}
+	]
+}
