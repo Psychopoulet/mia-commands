@@ -58,11 +58,11 @@
   },
 
   "dependencies": {
-    "node-pluginsmanager-plugin": "7.4.0"
+    "node-pluginsmanager-plugin": "7.4.2"
   },
   "devDependencies": {
     "@types/express": "5.0.6",
-    "@types/node": "25.9.3",
+    "@types/node": "26.1.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@types/socket.io": "3.0.2",
@@ -83,8 +83,8 @@
     "ts-loader": "9.6.2",
     "typescript": "5.9.3",
     "used-deps-analyzer": "0.4.0",
-    "webpack": "5.108.3",
-    "webpack-cli": "7.1.0"
+    "webpack": "5.108.4",
+    "webpack-cli": "7.2.1"
   },
 
   "author": "Sébastien VIDAL",
