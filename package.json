@@ -58,7 +58,7 @@
   },
 
   "dependencies": {
-    "node-pluginsmanager-plugin": "7.4.2"
+    "node-pluginsmanager-plugin": "7.4.3"
   },
   "devDependencies": {
     "@types/express": "5.0.6",
