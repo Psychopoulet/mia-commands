@@ -40,10 +40,30 @@ env:
 
 jobs:
 
+  require-develop-source:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+
+      - name: Ensure steps to avoid vulnerabilities
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # curl -s https://api.github.com/repos/step-security/harden-runner/commits/v2.19.3 | jq -r .sha
+        with:
+          egress-policy: audit
+
+      - name: Only allow PRs from develop into master
+        run: |
+          if [ "${{ github.base_ref }}" = "master" ] && [ "${{ github.head_ref }}" != "develop" ]; then
+            echo "::error::Merges into master are only allowed from the 'develop' branch (got '${{ github.head_ref }}')."
+            exit 1
+          fi
+
   tests:
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: require-develop-source
 
     steps:
 
