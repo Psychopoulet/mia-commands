@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "mia-commands",
-		"version": "1.1.0",
+		"version": "2.0.0",
 		"description": "Command executer plugin for MIA."
 	},
 	"paths": {
@@ -11,6 +11,9 @@
 				"description": "",
 				"summary": "Plugin's descriptor",
 				"operationId": "getPluginDescriptor",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "Plugin's descriptor",
@@ -40,6 +43,9 @@
 				"description": "",
 				"summary": "Plugin's status",
 				"operationId": "getPluginStatus",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "Plugin's status",
@@ -170,6 +176,9 @@
 				"description": "",
 				"summary": "Get all registered commands",
 				"operationId": "getRegisteredCommands",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "All registered commands",
@@ -269,6 +278,9 @@
 				"description": "",
 				"summary": "Get all running commands",
 				"operationId": "getRunningCommands",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "All running commands",
@@ -299,6 +311,9 @@
 				"description": "",
 				"summary": "Run a new command",
 				"operationId": "runCommand",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -336,6 +351,9 @@
 				"description": "",
 				"summary": "Stop a running command",
 				"operationId": "stopRunningCommand",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -369,6 +387,13 @@
 
 	},
 	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
 		"schemas": {
 			"PluginName": {
 				"type": "string",
@@ -462,217 +487,34 @@
 				]
 			},
 			"PushEventPluginInitialized": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "initialized" ]
-					}
-				},
-				"required": [ "id", "plugin", "command" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventPluginInitialized"
 			},
 			"PushEventPluginReleased": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "released" ]
-					}
-				},
-				"required": [ "id", "plugin", "command" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventPluginReleased"
 			},
 			"PushEventPluginError": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "error" ]
-					},
-					"data": {
-						"$ref": "#/components/schemas/Error"
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventPluginError"
 			},
 			"PushEventRegisteredCommandAdded": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "registered-command-added" ]
-					},
-					"data": {
-						"$ref": "#/components/schemas/RegisteredCommand"
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventRegisteredCommandAdded"
 			},
 			"PushEventRegisteredCommandDeleted": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "registered-command-deleted" ]
-					},
-					"data": {
-						"$ref": "#/components/schemas/RegisteredCommand"
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventRegisteredCommandDeleted"
 			},
 			"PushEventRunningCommandRunning": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "running-command-running" ]
-					},
-					"data": {
-						"$ref": "#/components/schemas/RunningCommand"
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventRunningCommandRunning"
 			},
 			"PushEventRunningCommandEnded": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "running-command-ended" ]
-					},
-					"data": {
-						"$ref": "#/components/schemas/RunningCommand"
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventRunningCommandEnded"
 			},
 			"PushEventRunningCommandFailed": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "running-command-failed" ]
-					},
-					"data": {
-						"type": "object",
-						"properties": {
-							"command": {
-								"$ref": "#/components/schemas/RunningCommand"
-							},
-							"error": {
-								"$ref": "#/components/schemas/Error"
-							}
-						},
-						"required": [ "command", "error" ]
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventRunningCommandFailed"
 			},
 			"PushEventRunningCommandLog": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "running-command-log" ]
-					},
-					"data": {
-						"type": "object",
-						"properties": {
-							"command": {
-								"$ref": "#/components/schemas/RunningCommand"
-							},
-							"content": {
-								"type": "string",
-								"minLength": 1
-							}
-						},
-						"required": [ "command", "content" ]
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventRunningCommandLog"
 			},
 			"PushEventRunningCommandWarning": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"plugin": {
-						"$ref": "#/components/schemas/PluginName"
-					},
-					"command": {
-						"type": "string",
-						"enum": [ "running-command-warning" ]
-					},
-					"data": {
-						"type": "object",
-						"properties": {
-							"command": {
-								"$ref": "#/components/schemas/RunningCommand"
-							},
-							"content": {
-								"type": "string",
-								"minLength": 1
-							}
-						},
-						"required": [ "command", "content" ]
-					}
-				},
-				"required": [ "id", "plugin", "command", "data" ]
+				"$ref": "./DescriptorEvents.json#/components/schemas/PushEventRunningCommandWarning"
 			}
 		}
 	},
