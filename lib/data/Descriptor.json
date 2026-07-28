@@ -11,6 +11,9 @@
 				"description": "",
 				"summary": "Plugin's descriptor",
 				"operationId": "getPluginDescriptor",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "Plugin's descriptor",
@@ -40,6 +43,9 @@
 				"description": "",
 				"summary": "Plugin's status",
 				"operationId": "getPluginStatus",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "Plugin's status",
@@ -170,6 +176,9 @@
 				"description": "",
 				"summary": "Get all registered commands",
 				"operationId": "getRegisteredCommands",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "All registered commands",
@@ -269,6 +278,9 @@
 				"description": "",
 				"summary": "Get all running commands",
 				"operationId": "getRunningCommands",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "All running commands",
@@ -299,6 +311,9 @@
 				"description": "",
 				"summary": "Run a new command",
 				"operationId": "runCommand",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -336,6 +351,9 @@
 				"description": "",
 				"summary": "Stop a running command",
 				"operationId": "stopRunningCommand",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -369,6 +387,13 @@
 
 	},
 	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
 		"schemas": {
 			"PluginName": {
 				"type": "string",
