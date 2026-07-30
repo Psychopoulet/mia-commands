@@ -6,81 +6,6 @@
 		"description": "Command executer plugin for MIA."
 	},
 	"paths": {
-		"/mia-commands/api/descriptor": {
-			"get": {
-				"description": "",
-				"summary": "Plugin's descriptor",
-				"operationId": "getPluginDescriptor",
-				"security": [
-					{ "bearerAuth": [] }
-				],
-				"responses": {
-					"200": {
-						"description": "Plugin's descriptor",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "An error occurred",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Error"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/mia-commands/api/status": {
-			"get": {
-				"description": "",
-				"summary": "Plugin's status",
-				"operationId": "getPluginStatus",
-				"security": [
-					{ "bearerAuth": [] }
-				],
-				"responses": {
-					"200": {
-						"description": "Plugin's status",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "string",
-									"enum": [ "ENABLED", "INITIALIZED", "RELEASED" ]
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The plugin is not enabled (=RELEASED)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Error"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "An error occurred",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Error"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
 
 		"/mia-commands/public/index.html": {
 			"get": {
@@ -171,6 +96,81 @@
 			}
 		},
 
+		"/mia-commands/api/descriptor": {
+			"get": {
+				"description": "",
+				"summary": "Plugin's descriptor",
+				"operationId": "getPluginDescriptor",
+				"security": [
+					{ "bearerAuth": [] }
+				],
+				"responses": {
+					"200": {
+						"description": "Plugin's descriptor",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/mia-commands/api/status": {
+			"get": {
+				"description": "",
+				"summary": "Plugin's status",
+				"operationId": "getPluginStatus",
+				"security": [
+					{ "bearerAuth": [] }
+				],
+				"responses": {
+					"200": {
+						"description": "Plugin's status",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"enum": [ "ENABLED", "INITIALIZED", "RELEASED" ]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The plugin is not enabled (=RELEASED)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "An error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/mia-commands/api/registered-commands": {
 			"get": {
 				"description": "",
