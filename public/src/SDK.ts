@@ -1,7 +1,7 @@
 // deps
 
-    // natives
-    import { EventEmitter } from "events";
+    // locals
+    import EventEmitter from "./EventEmitter";
 
 // types & interfaces
 
