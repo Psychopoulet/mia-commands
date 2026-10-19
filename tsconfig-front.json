@@ -7,11 +7,9 @@
         "lib": [ "es2022", "dom" ],
 
         "outDir": "./public/dist/",
-        "rootDir": "./public/src",
         "sourceMap": true,
 
-        "moduleResolution": "node",
-        "ignoreDeprecations": "6.0",
+        "moduleResolution": "bundler",
 
         "alwaysStrict": true,
         "strict": true,

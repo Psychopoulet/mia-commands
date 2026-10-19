@@ -55,7 +55,6 @@ describe("compilation typescript", () => {
                 "--target es6",
                 "--module commonjs",
                 "--esModuleInterop",
-                "--ignoreConfig",
                 "--types node"
             ];
 
