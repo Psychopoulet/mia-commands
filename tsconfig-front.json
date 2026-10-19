@@ -7,9 +7,11 @@
         "lib": [ "es2022", "dom" ],
 
         "outDir": "./public/dist/",
+        "rootDir": "./public/src",
         "sourceMap": true,
 
         "moduleResolution": "node",
+        "ignoreDeprecations": "6.0",
 
         "alwaysStrict": true,
         "strict": true,

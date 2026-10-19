@@ -12,7 +12,7 @@
     const { ConflictError, NotFoundError } = require("node-pluginsmanager-plugin");
 
     // locals
-    const Mediator = require("../lib/cjs/Mediator.js").default;
+    const Mediator = require("../lib/src/Mediator.ts").default;
 
 // consts
 
