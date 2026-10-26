@@ -1,15 +1,15 @@
 {
     "compilerOptions": {
 
-        "target": "es2022",
+        "target": "es2024",
         "module": "es6",
 
-        "lib": [ "es2022", "dom" ],
+        "lib": [ "es2024", "dom" ],
 
         "outDir": "./public/dist/",
         "sourceMap": true,
 
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
 
         "alwaysStrict": true,
         "strict": true,

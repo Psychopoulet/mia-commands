@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+// - @typescript-eslint/no-unnecessary-condition is disabled to let the app check unknown statuses
+
 // deps
 
     // externals
@@ -172,6 +175,13 @@ export default class App extends React.Component<iPropsNode, iState> {
 
             return <div className="container">
                 <Alert variant="info">Not initialized yet...</Alert>
+            </div>;
+
+        }
+        else if ("INITIALIZED" !== this.state.status) {
+
+            return <div className="container">
+                <Alert variant="warning">Unknown status: { this.state.status }</Alert>
             </div>;
 
         }

@@ -1,7 +1,7 @@
 // deps
 
-    // natives
-    import { EventEmitter } from "events";
+    // locals
+    import EventEmitter from "./EventEmitter";
 
 // types & interfaces
 
@@ -106,7 +106,7 @@ export class SDK extends EventEmitter<{
             return;
         }
 
-        if (this._reconnectTimeout) {
+        if (null !== this._reconnectTimeout) {
             return;
         }
 
@@ -205,7 +205,7 @@ export class SDK extends EventEmitter<{
 
     public disconnect (): void {
 
-        if (this._reconnectTimeout) {
+        if (null !== this._reconnectTimeout) {
             clearTimeout(this._reconnectTimeout);
             this._reconnectTimeout = null;
         }
