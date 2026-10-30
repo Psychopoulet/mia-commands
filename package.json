@@ -19,6 +19,9 @@
 
   "scripts": {
 
+    "install-prod": "npm install --omit=dev --omit=optional && npm audit fix --omit=dev --omit=optional",
+    "install-dev": "npm install --allow-git=root && npm audit fix --allow-git=root && npx husky",
+
     "transpile-openapi-back": "npx openapi-typescript ./lib/data/Descriptor.json -o ./lib/src/Descriptor.ts",
     "transpile-openapi-front": "npx openapi-typescript ./lib/data/Descriptor.json -o ./public/src/Descriptor.ts",
     "transpile-openapi": "npm run transpile-openapi-back && npm run transpile-openapi-front",
@@ -54,7 +57,7 @@
     "public/index.html"
   ],
   "engines": {
-    "node": ">=22.23.4"
+    "node": ">=24.22.2"
   },
 
   "dependencies": {
