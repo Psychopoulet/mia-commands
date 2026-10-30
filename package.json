@@ -1,7 +1,7 @@
 {
 
   "name": "mia-commands",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Command executer plugin for MIA.",
 
   "type": "commonjs",
