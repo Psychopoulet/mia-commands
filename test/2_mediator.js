@@ -26,6 +26,16 @@
     const originalKill = process.kill.bind(process);
     const originalExec = childProcess.exec.bind(childProcess);
 
+// private
+
+    function _isWin32 () {
+        return "win32" === process.platform;
+    }
+
+    function _itOnlyOnWin32 () {
+        return _isWin32() ? it : it.skip;
+    }
+
 // module
 
 function waitForEvent (emitter, eventName) {
@@ -551,7 +561,7 @@ describe("mediator", () => {
 
     }).timeout(MAX_TIMEOUT);
 
-    it("should stop a running command on win32", () => {
+    _itOnlyOnWin32()("should stop a running command on win32", () => {
 
         Object.defineProperty(process, "platform", {
             "configurable": true,
